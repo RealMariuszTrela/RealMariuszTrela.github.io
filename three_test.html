@@ -39,7 +39,10 @@
 
 				
                 loader.load( 'AYAS_Lisc.stl', function ( geometry) {
-                    var material = new THREE.MeshPhongMaterial( { color: 0xaaaaaa, specular: 0x111111, shininess: 200	 } );
+                    var textureLoader = new THREE.TextureLoader();
+		    var texture1 = textureLoader.load( "drewno.png" );
+
+		    var material = new THREE.MeshPhongMaterial( { map: texture1, specular: 0x111111, shininess: 200	 } );
                     leaf = new THREE.Mesh( geometry, material );
                     leaf.position.set( 0, 0, 0);
                     //mesh.rotation.set( 0, 0 , Math.PI/2 );
