@@ -13,6 +13,7 @@
 			var container, stats;
 			var camera, cameraTarget, scene, renderer;
 			var leaf;
+	    		var texture;
 			init();
 			animate();
 			function init() {
@@ -40,8 +41,9 @@
 				
                 loader.load( 'cube.stl', function ( geometry) {
                     var textureLoader = new THREE.TextureLoader();
-		    var texture1 = textureLoader.load( "drewno.png" );
-
+		    var texture = textureLoader.load( "drewno.png" );
+		    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+		    texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
 		    var material = new THREE.MeshPhongMaterial( { map: texture1, specular: 0x111111, shininess: 200	 } );
                     leaf = new THREE.Mesh( geometry, material );
                     leaf.position.set( 0, 0, 0);
