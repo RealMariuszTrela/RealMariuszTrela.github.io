@@ -30,7 +30,7 @@
 					new THREE.MeshPhongMaterial( { color: 0x999999, specular: 0x101010 } )
 				);
 				plane.rotation.x = - Math.PI / 2;
-				plane.position.y = - 0.5;
+				plane.position.y = - 1.0;
 				scene.add( plane );
 				plane.receiveShadow = true;
                 
@@ -38,15 +38,43 @@
 				// ASCII file
 
 				
-                loader.load( 'AYAS_Lisc.stl', function ( geometry) {
+                loader.load( 'projekt-lisc123D_popr.stl', function ( geometry) {
                     var textureLoader = new THREE.TextureLoader();
-		    var texture1 = textureLoader.load( "drewno.png" );
+					var texture1 = textureLoader.load( "drewno.png" );
 
-		    var material = new THREE.MeshPhongMaterial( { map: texture1, specular: 0x111111, shininess: 200	 } );
+					var material = new THREE.MeshPhongMaterial( { map: texture1, specular: 0x111111, shininess: 10} );
+					
+					geometry = new THREE.Geometry().fromBufferGeometry(geometry);
+					
+					geometry.computeBoundingBox();
+
+					var max = geometry.boundingBox.max,
+						min = geometry.boundingBox.min;
+					var offset = new THREE.Vector2(0 - min.x, 0 - min.y);
+					var range = new THREE.Vector2(max.x - min.x, max.y - min.y);
+					var faces = geometry.faces;
+
+					geometry.faceVertexUvs[0] = [];
+
+					for (var i = 0; i < faces.length ; i++) {
+
+						var v1 = geometry.vertices[faces[i].a], 
+							v2 = geometry.vertices[faces[i].b], 
+							v3 = geometry.vertices[faces[i].c];
+
+						geometry.faceVertexUvs[0].push([
+							new THREE.Vector2((v1.x + offset.x)/range.x ,(v1.y + offset.y)/range.y),
+							new THREE.Vector2((v2.x + offset.x)/range.x ,(v2.y + offset.y)/range.y),
+							new THREE.Vector2((v3.x + offset.x)/range.x ,(v3.y + offset.y)/range.y)
+						]);
+					}
+					geometry.uvsNeedUpdate = true;
+					
+					
                     leaf = new THREE.Mesh( geometry, material );
                     leaf.position.set( 0, 0, 0);
                     //mesh.rotation.set( 0, 0 , Math.PI/2 );
-                    leaf.scale.set( 0.01, 0.01, 0.01 );
+                    leaf.scale.set( 0.02, 0.02, 0.02 );
                     leaf.castShadow = true;
                     leaf.receiveShadow = true;
                     scene.add( leaf );
@@ -96,8 +124,8 @@
 			function render() {
 				var timer = Date.now() * 0.001;
 				//var timer = 0;
-				camera.position.x = Math.cos( 0 ) * 3;
-				camera.position.z = Math.sin( 0 ) * 3;
+				camera.position.x = Math.cos( timer ) * 3;
+				camera.position.z = Math.sin( timer ) * 3;
 				camera.lookAt( cameraTarget );
 				leaf.rotation.x = timer;
 				renderer.render( scene, camera );
