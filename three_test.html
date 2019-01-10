@@ -13,6 +13,16 @@
 			var container, stats;
 			var camera, cameraTarget, scene, renderer;
 			var leaf;
+	    		var texture;
+	    		var API = {
+				offsetX: 0,
+				offsetY: 0,
+				repeatX: 0.25,
+				repeatY: 0.25,
+				rotation: Math.PI / 4, // positive is counter-clockwise
+				centerX: 0.5,
+				centerY: 0.5
+			};
 			init();
 			animate();
 			function init() {
@@ -78,6 +88,9 @@
                     leaf.castShadow = true;
                     leaf.receiveShadow = true;
                     scene.add( leaf );
+		    
+		//    initGui();
+		 //   render();
                 } );
 
 
@@ -130,6 +143,17 @@
 				leaf.rotation.x = timer;
 				renderer.render( scene, camera );
 			}
+	    		function initGui() {
+				gui = new dat.GUI();
+				gui.add( API, 'offsetX', 0.0, 1.0 ).name( 'offset.x' ).onChange( updateUvTransform );
+				gui.add( API, 'offsetY', 0.0, 1.0 ).name( 'offset.y' ).onChange( updateUvTransform );
+				gui.add( API, 'repeatX', 0.25, 2.0 ).name( 'repeat.x' ).onChange( updateUvTransform );
+				gui.add( API, 'repeatY', 0.25, 2.0 ).name( 'repeat.y' ).onChange( updateUvTransform );
+				gui.add( API, 'rotation', - 2.0, 2.0 ).name( 'rotation' ).onChange( updateUvTransform );
+				gui.add( API, 'centerX', 0.0, 1.0 ).name( 'center.x' ).onChange( updateUvTransform );
+				gui.add( API, 'centerY', 0.0, 1.0 ).name( 'center.y' ).onChange( updateUvTransform );
+			}
+
     </script>
     </body>
 </html>
